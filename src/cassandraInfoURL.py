@@ -37,4 +37,5 @@ def getDataFromTable(keyspace, tablename):
     return tableVal
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run('0.0.0.0', 5000, debug=True)
+    # app.run(debug=True)
