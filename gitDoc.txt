@@ -1,0 +1,5 @@
+git init
+git add *
+git commit -m "My initial commit"
+git remote add origin git@github.com:allaramanaidu/sendToCassandraAndFlaskURL.git
+git push -u origin master
