@@ -1,0 +1,87 @@
+Spark installation on ubuntu:
+
+1) Unzip and move Spark::
+
+cd ~/Downloads/
+tar xzvf spark-2.0.1-bin-hadoop2.7.tgz 
+mv spark-2.0.1-bin-hadoop2.7/ spark
+sudo mv spark/ /usr/lib/
+
+
+2) Install SBT
+
+echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+sudo apt-get update
+sudo apt-get install sbt
+
+3) Make sure Java is installed
+   IF NOT:
+
+sudo apt-add-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-instal
+
+
+4) Configure spark
+
+cd /usr/lib/spark/conf/
+cp spark-env.sh.template spark-env.sh
+vi spark-env.sh
+
+Add the following lines
+
+JAVA_HOME=/usr/lib/jvm/java-8-oracle
+SPARK_WORKER_MEMORY=4g
+
+
+
+5) Configure IPv6
+
+sudo vi /etc/sysctl.conf
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+
+
+6) Configure .bashrc
+
+nano ~/.bashrc
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+export SBT_HOME=/usr/share/sbt-launcher-packaging/bin/sbt-launch.jar
+export SPARK_HOME=/usr/lib/spark
+export PATH=$PATH:$JAVA_HOME/bin
+export PATH=$PATH:$SBT_HOME/bin:$SPARK_HOME/bin:$SPARK_HOME/sbin
+
+7) spark python shell:
+
+cd /usr/lib/spark pyspark
+
+
+8)********************************** To run spark server
+
+/usr/lib/spark/bin$ spark-shell
+
+open in webbrowser: localhost:4040
+
+======================================== Other stuff ======================
+in spark/bin
+
+./spark-submit --jars spark-streaming-kafka-0-8-assembly_2.11-2.2.0.jar ../examples/src/main/python/streaming/kafka_wordcount.py 10.91.17.31:9082 test1
+
+./spark-submit --jars spark-streaming-kafka-0-8-assembly_2.11-2.2.0.jar ../examples/src/main/python/streaming/kafka_wordcount.py localhost:9092 test
+
+
+================================== Kafka ======================================
+
+project/dataingestion/kafka$ bin/zookeeper-server-start.sh config/zookeeper.properties
+
+project/dataingestion/kafka$ bin/kafka-server-start.sh config/server.properties
+
+project/dataingestion/kafka$ bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic test
+
+project/dataingestion/kafka$ bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test
+
+project/dataingestion/kafka$ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test
+
+

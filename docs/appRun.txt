@@ -1,0 +1,61 @@
+****************App running with sparkConsumer and sparkProducer
+
+************** Run kafka and zookeeper server
+project/dataingestion/kafka$ bin/zookeeper-server-start.sh config/zookeeper.properties
+project/dataingestion/kafka$ bin/kafka-server-start.sh config/server.properties
+
+************** Create topic
+project/dataingestion/kafka$ bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic test(topic name)
+
+************** Running with FTP server
+/project/dataingestion/app$ python server.py
+
+/project/dataingestion/app$ python producer.py localhost:9092 topicname "ftp://anonymous:12345@127.0.0.1:1026/count.csv"
+
+/project/dataingestion/app$ python consumer.py localhost:2181 topicname table10name (keyspace name === topicname)
+
+/project/dataingestion/app$ python getDataToCassandra.py
+
+
+************** Running spark producer
+/project/dataingestion/app$ python SparkProducer.py localhost:9092 topicname count.csv
+
+************** Running spark consumer
+/project/dataingestion/app$ python sparkConsumer.py localhost:2181 topicname tablename 
+
+************* Running http sevice for getting data from sparkConsumer and insert data to cassandra database
+/project/dataingestion/app$ python getDataToCassandra.pyssss
+
+
+============ Connect to Cassandra cluster using command line ==================:
+export CQLSH_HOST="10.91.17.54"
+echo $CQLSH_HOST
+
+cqlsh --cqlversion="3.4.4"
+
+Cassandra port : 9042
+
+
+To open process with pid and port:
+netstat -tupln | grep java
+
+telnet localhost 9042
+====================== Cql Commands:
+Kyespace::=======
+1) Creating keysapce ---> CREATE KEYSPACE testkeyspace1 WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : '3' };
+2) To view keysapces ---> describe keyspaces; or desc keyspaces;
+3) Alter keyspace ---> Alter Keyspace testkeyspace1 with replication={'class':'SimpleStrategy', 'replication_factor': '2' } 
+    	with DURABLE_WRITES=true/false
+4) Drop keyspace ---> Drop keyspace KeyspaceName;
+
+coloumn families:==========
+1) Creating tables ---> create table student (studentid int,marks float,description text,primary key(studentid)); // studentid is partioned key
+create table student (id text,studentname text,studentclass text,age text,marks text,primary key(id));
+
+Note:
+primary_key((partition_key), clustering_col )
+Partition key - The first part of the primary key. The main aim of a partition key is to identify the node which stores the particular row. 
+
+2) To view tables ---> describe tables; or desc tables;
+3) Inserting data into tables --->  insert into student (studentid,marks,description) values (20,65,'student 2');
+4) To view table data ---> select * from student;
