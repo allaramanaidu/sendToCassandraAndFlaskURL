@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def getAllDbs():
+    ''' This function is for List out all keysapces existing in cassandra db'''
     keyspace = cluster.metadata.keyspaces
     keyspaces = []
     for key in keyspace.keys():
@@ -19,6 +20,7 @@ def getAllDbs():
 
 @app.route("/<keyspace>")
 def getTableNames(keyspace):
+    ''' This function is for list out all tables existing in cassadra keyspace'''
     table = cluster.metadata.keyspaces[keyspace].tables
     tables = []
     for key in table.keys():
@@ -28,6 +30,7 @@ def getTableNames(keyspace):
 
 @app.route("/<keyspace>/<tablename>")
 def getDataFromTable(keyspace, tablename):
+    ''' This function is for getting table data'''
     query = "SELECT * FROM "+keyspace+"."+tablename
     df = pd.DataFrame(list(session.execute(query)))
     tableVal = df.to_json(orient='records')
