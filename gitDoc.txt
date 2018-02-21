@@ -1,5 +1,6 @@
 git init
-git add *
+git add * // this is for all files
+git add filename // this is for particular file
 git commit -m "My initial commit"
 git remote add origin git@github.com:allaramanaidu/sendToCassandraAndFlaskURL.git
 git push -u origin master
