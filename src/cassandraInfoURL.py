@@ -16,7 +16,7 @@ def getAllDbs():
     for key in keyspace.keys():
         key = str(key)
         keyspaces.append(key)
-    return json.dumps({'Available keyspaces': keyspaces, 'URL for getting tables in keyspace': 'https:/localhost:7000/keyspacename'})
+    return json.dumps({'Available keyspaces': keyspaces, 'URL for getting tables in keyspace': 'https:/localhost:5000/keyspacename'})
 
 @app.route("/<keyspace>")
 def getTableNames(keyspace):
@@ -26,7 +26,7 @@ def getTableNames(keyspace):
     for key in table.keys():
         key = str(key)
         tables.append(key)
-    return json.dumps({'Available tables': tables, 'URL for getting collections in db': 'https:/localhost:7000/keysapce/table name'})
+    return json.dumps({'Available tables': tables, 'URL for getting collections in db': 'https:/localhost:5000/keysapce/table name'})
 
 @app.route("/<keyspace>/<tablename>")
 def getDataFromTable(keyspace, tablename):
