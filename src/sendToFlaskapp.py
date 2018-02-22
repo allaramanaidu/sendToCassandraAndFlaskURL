@@ -23,6 +23,6 @@ for index, row in df.iterrows():
     json_data = json.dumps(dict)
     print(json_data)
     server_return = requests.post(url, headers=headers, data=json_data)
-    print("===================")
+    print("==================================")
 
 print(server_return.status_code)
