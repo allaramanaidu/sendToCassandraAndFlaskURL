@@ -29,7 +29,7 @@ def getAllDbs():
 @app.route("/<keyspace>")
 def getTableNames(keyspace):
     """
-    this function will listout the available keyspaces in  cassandra
+    this function will listout the available tables in cassandra keyspace
 
     :param keyspace: keyspace name
     :type keyspace : str
@@ -47,7 +47,7 @@ def getTableNames(keyspace):
 @app.route("/<keyspace>/<tablename>")
 def getDataFromTable(keyspace, tablename):
     """
-    this function will listout the available keyspaces in  cassandra
+    this function to get data from cassandra table
 
     :param keyspace: keyspace name
     :type keyspace : str
@@ -59,8 +59,8 @@ def getDataFromTable(keyspace, tablename):
     """
     query = "SELECT * FROM "+keyspace+"."+tablename
     df = pd.DataFrame(list(session.execute(query)))
-    tableVal = df.to_json(orient='records')
-    return tableVal
+    tableData = df.to_json(orient='records')
+    return tableData
 
 if __name__ == '__main__':
     app.run('0.0.0.0', 5000, debug=True)
