@@ -41,6 +41,6 @@ def to_csv(df):
 
 
 if __name__ == "__main__":
-  filepath = 't3.csv'
+  filepath = 'count.csv'
   #to_mongo('tvsnext', filepath)
   from_mongo('tvsnext', 't3')
