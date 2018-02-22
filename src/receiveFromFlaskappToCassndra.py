@@ -39,7 +39,7 @@ def get_data():
         if row > 2:
             header.append(k)
         values.append(str(v))
-    print ("values:", values)
+    print("values:", values)
 
     query = """INSERT INTO """+tablename+"""("""
 

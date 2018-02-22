@@ -19,7 +19,7 @@ def getAllDbs():
     :rtype: json(all the keyspaces)
 
     """
-     keyspace = cluster.metadata.keyspaces
+    keyspace = cluster.metadata.keyspaces
     keyspaces = []
     for key in keyspace.keys():
         key = str(key)
