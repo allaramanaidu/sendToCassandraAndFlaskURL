@@ -12,8 +12,8 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 username = str(config["mysql"]["username"])
 password = str(config["mysql"]["password"])
-host = str(config.read["mysql"]["host"])
-port = int(config.read["mysql"]["port"]))
+host = str(config["mysql"]["host"])
+port = int(config["mysql"]["port"]))
 
 engine = create_engine("mysql://" + username + ":" + password + "@" + host)
 def to_mysql(filename, db_name):
