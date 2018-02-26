@@ -7,13 +7,14 @@ import ast
 cluster = Cluster(['10.91.17.54'])
 session = cluster.connect()
 
-app = Flask(__name__)
+header = []
+values = []
+previousTable = ''
 
-row = 1
-tab = ''
+app = Flask(__name__)
 @app.route('/',  methods=['POST'])
 def get_data():
-    global session, row, tab
+    global session, previousTable, header, values
     dict = ast.literal_eval(request.data)
     for k in dict['record'].keys():
         k1 = str(k)
@@ -22,33 +23,28 @@ def get_data():
     print(dict)
     keyspace = dict['keyspace']
     tablename = dict['tablename']
-    header = []
     values = []
 
-    if(tablename != tab):
-        row = 1
-
-    if row == 1:
-        tab = tablename
+    if (tablename != previousTable):
+        header = []
+        previousTable = tablename
         session.execute("CREATE KEYSPACE IF NOT EXISTS "+keyspace+" WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': '3'}")
         session.set_keyspace(keyspace)
 
-        for k, v in dict['record'].iteritems():
-            header.append(k)
-        for i in range(0, len(header)):
-            if i == 0:
-                #session.execute("""CREATE TABLE IF NOT EXISTS tvs(""" +header[i] +""" text,PRIMARY KEY (""" +header[0] +"""))""")
-                session.execute("""CREATE TABLE IF NOT EXISTS """+tablename+"""(""" + header[i] + """ text,PRIMARY KEY ("""+header[i]+"""))""")
-            else:
-                session.execute("""ALTER TABLE """+tablename+""" ADD """+ header[i] +""" text""")
-        print("****************Table created successfully!!!! with row:", row)
+        for columnName, val in dict['record'].iteritems():
+            header.append(columnName)
 
-    row = row + 1
-    for k, v in dict['record'].iteritems():
-        if row > 2:
-            header.append(k)
-        values.append(str(v))
-    print("values:", values)
+        for columName in range(0, len(header)):
+            if columName == 0:
+                #session.execute("""CREATE TABLE IF NOT EXISTS tvs(""" +header[i] +""" text,PRIMARY KEY (""" +header[0] +"""))""")
+                session.execute("""CREATE TABLE IF NOT EXISTS """+tablename+"""(""" + header[columName] + """ text,PRIMARY KEY ("""+header[columName]+"""))""")
+            else:
+                session.execute("""ALTER TABLE """+tablename+""" ADD """+ header[columName] +""" text""")
+        print("****************Table created successfully!!!!")
+
+    for columnName, val in dict['record'].iteritems():
+        values.append(str(val))
+
 
     query = """INSERT INTO """+tablename+"""("""
 
@@ -57,16 +53,14 @@ def get_data():
     query = query[:-1]
     query += """)""" + """ VALUES"""
 
-    for r in range(len(values)):
-        if (r != 0):
-            qu = ''
-            t = tuple(values)
-            #print (t)
-            qu = query
-            qu += str(t)
-            #print (qu)
-            session.execute(qu)
-    print("*******************Data inserted!!!!!!!!!!!!!!!")
+    for row in range(len(values)):
+        if (row != 0):
+            insertQuery = ''
+            data = tuple(values)
+            insertQuery = query
+            insertQuery += str(data)
+            session.execute(insertQuery)
+    print("*******************Data inserted")
     return Response('We recieved something…')
 
 if __name__ == '__main__':
