@@ -10,17 +10,26 @@ session = cluster.connect()
 app = Flask(__name__)
 
 row = 1
-@app.route('/', methods=['POST'])
+tab = ''
+@app.route('/',  methods=['POST'])
 def get_data():
-    global session, row
+    global session, row ,tab
     dict = ast.literal_eval(request.data)
+    for k in dict['record'].keys():
+        k1 = str(k)
+        if k1 == 'index':
+            del(dict['record']['index'])
     print(dict)
     keyspace = dict['keyspace']
     tablename = dict['tablename']
     header = []
     values = []
 
+    if(tablename != tab):
+        row = 1
+
     if row == 1:
+        tab = tablename
         session.execute("CREATE KEYSPACE IF NOT EXISTS "+keyspace+" WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': '3'}")
         session.set_keyspace(keyspace)
 
@@ -57,7 +66,8 @@ def get_data():
             qu += str(t)
             #print (qu)
             session.execute(qu)
-            print("*******************Data inserted!!!!!!!!!!!!!!!")
+    print("*******************Data inserted!!!!!!!!!!!!!!!")
+
     return Response('We recieved something…')
 
 if __name__ == '__main__':
