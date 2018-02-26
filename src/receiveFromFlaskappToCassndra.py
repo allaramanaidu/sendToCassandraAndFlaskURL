@@ -13,7 +13,7 @@ row = 1
 tab = ''
 @app.route('/',  methods=['POST'])
 def get_data():
-    global session, row ,tab
+    global session, row, tab
     dict = ast.literal_eval(request.data)
     for k in dict['record'].keys():
         k1 = str(k)
@@ -67,7 +67,6 @@ def get_data():
             #print (qu)
             session.execute(qu)
     print("*******************Data inserted!!!!!!!!!!!!!!!")
-
     return Response('We recieved something…')
 
 if __name__ == '__main__':
