@@ -23,8 +23,7 @@ class logger_class:
             else :
                 pass
 
-
-        else  # save into file
+        else:  # save into file
             self.fileHandler = logging.FileHandler('test.log')
             self.fileHandler.setFormatter(self.formater)
             self.logger.addHandler(self.fileHandler)
