@@ -3,7 +3,7 @@ from pandas import read_csv
 from sqlalchemy import create_engine
 import sys
 import configparser
-import logger
+from . import logger
 
 
 loggerObject = logger.logger_class(__name__)
@@ -13,9 +13,11 @@ config.read('config.ini')
 username = str(config["mysql"]["username"])
 password = str(config["mysql"]["password"])
 host = str(config["mysql"]["host"])
-port = int(config["mysql"]["port"]))
+port = int(config["mysql"]["port"])
 
 engine = create_engine("mysql://" + username + ":" + password + "@" + host)
+
+
 def to_mysql(filename, db_name):
     """
     :param filename:
